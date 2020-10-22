@@ -1,12 +1,6 @@
 //import * as jQuery from "jquery";
 //import handlebars from "handlebars";
 
-/*
-{
-    title: "My New Post",
-    handlebars: "This is my first post!"
-  }
-*/
 
 const startBtn = document.getElementById('start-btn')
 const nextBtn = document.getElementById('next-btn')
@@ -15,7 +9,7 @@ const score = document.getElementById('score')
 const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerBtnsElement = document.getElementById('answer-buttons')
-const mySound = document.getElementById("sound")
+const mySound = document.getElementById("myAudio")
 
 let shuffledQuestions, currentQuestionIndex
 
@@ -27,11 +21,8 @@ nextBtn.addEventListener('click', () => {
 })
 
 async function  getData() {
-  //  const jQuery = require("jquery")
     const url = 'https://opentdb.com/api.php?amount=10&type=multiple'
     const request = await (await fetch(url)).json()
-    //const request = jQuery.get(url)
-   console.log(request)
    return request
 }
 
@@ -62,6 +53,9 @@ function showQuestion(question) {
     console.log('SHOWING QUESTION', question)
     questionElement.innerText = question.question
     
+    let score = 0;
+    const audio = document.getElementById("myAudio");
+
     let allAnswers = [question.correct_answer, ...question.incorrect_answers]
     allAnswers.sort(() => Math.random() - .5)
     allAnswers.forEach(answer => {
@@ -70,7 +64,9 @@ function showQuestion(question) {
         button.classList.add('btn')
         if(answer === question.correct_answer ) {
             console.log('WOW YOU KNEW SOMETHING')
-            button.dataset.correct = answer.correct
+            button.dataset.correct = answer.correct;
+            score++;
+            playAudio()
         }else {
             console.log("NOOB")
         }
@@ -78,7 +74,9 @@ function showQuestion(question) {
         answerBtnsElement.appendChild(button)
     })
 }
-
+function playAudio() { 
+    mySound.play(); 
+  } 
 function resetState() {
     nextBtn.classList.add('hide')
     while (answerBtnsElement.firstChild) {
@@ -109,8 +107,6 @@ function setStatusClass(element, correct) {
         
     } else {
         element.classList.add('wrong')
-
-       //var x = document.getElementById("myAudio"); function(){ mySound.play();}
     }
 }
 
